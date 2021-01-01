@@ -1,6 +1,6 @@
 body {
   margin: 10px;
-  background: #eee;
+  background: #e4d6a7;
 }
 #content {
   background: #fff;
@@ -47,7 +47,7 @@ li {
   color: #000;
 }
 li:hover {
-  background-color: #0000FF;
+  background-color: #e9b44c;
   color: #FFF;
 }
 li:hover .label {
