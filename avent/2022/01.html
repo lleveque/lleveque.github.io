@@ -3,14 +3,24 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>01/12 - Calendrier de l'Avent 2022</title>
+    <link rel="stylesheet" type="text/css" href="assets/css/green-audio-player.min.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/avent.css">
+
+    <title>Calendrier de l'Avent 2022</title>
   </head>
   <body>
     <main>
-       <audio controls autoplay>
-        <source src="01 - Nadiyah - Et c'est parti.mp3" type="audio/mpeg">
-        Your browser does not support the audio element.
-      </audio>
+      <div onclick="player.togglePlay()">
+        <img id="square" src="assets/png/01-Nadiyah" />
+      </div>
+      <div id="player">
+         <audio>
+          <source autoplay src="assets/mp3/01-Nadiyah" type="audio/mp3">
+          Ça n'a pas l'air de marcher... :(
+        </audio>
+      </div>
     </main>
+    <script src="assets/js/green-audio-player.min.js"></script>
+    <script src="assets/js/avent.js"></script>
   </body>
 </html>

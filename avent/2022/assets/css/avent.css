@@ -1,0 +1,35 @@
+html, body { height: 100%; }
+
+body {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #F8FFAE;
+    background: -webkit-linear-gradient(-65deg, #43C6AC, #F8FFAE);
+    background: linear-gradient(-65deg, #43C6AC, #F8FFAE);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+main {
+  width: 90%;
+}
+
+img {
+  width: 100%;
+}
+
+#square {
+  display: none;
+}
+
+#player {
+  width: 100%;
+}
+
+@media (orientation: landscape) {
+  main {
+    width: 300px;
+  }
+}
