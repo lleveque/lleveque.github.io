@@ -28,6 +28,36 @@ img {
   width: 100%;
 }
 
+#transport {
+  display: flex;
+  visibility: none;
+  justify-content: center;
+  margin-top: 15%;
+
+  font-weight: 500;
+  font-size: xx-large;
+  font-family: Roboto,sans-serif;
+  color: #55606e;
+}
+
+#transport > div {
+  visibility: hidden;
+  padding-left: 5%;
+  padding-right: 5%;
+}
+
+a {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+#date {
+  font-weight: 600;
+  font-size: xx-large;
+  font-family: Roboto,sans-serif;
+  color: #55606e;
+}
+
 @media (orientation: landscape) {
   main {
     width: 300px;
