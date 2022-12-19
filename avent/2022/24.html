@@ -8,9 +8,9 @@
 
     <title>Calendrier de l'Avent 2022</title>
   </head>
-  <body>
+  <body class="rotate">
     <main>
-      <div onclick="player.togglePlay()">
+      <div onclick="player.togglePlay(); disco();">
         <img id="square" src="assets/png/24-GetLucky" />
       </div>
       <div id="player">
@@ -26,6 +26,7 @@
       </div>
     </main>
     <script src="assets/js/green-audio-player.min.js"></script>
+    <script src="assets/js/gradients.js"></script>
     <script src="assets/js/avent.js"></script>
   </body>
 </html>

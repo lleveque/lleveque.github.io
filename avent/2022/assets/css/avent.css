@@ -11,6 +11,7 @@ body {
     background: linear-gradient(-65deg, #43C6AC, #F8FFAE);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+
 }
 
 main {
@@ -68,4 +69,36 @@ a {
   main {
     width: 300px;
   }
+}
+
+:root {
+  --gradient-angle: 0deg;
+}
+
+@property --gradient-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: true;
+}
+
+@keyframes gradient-rotate {
+  from { --gradient-angle: 0deg; }
+  to { --gradient-angle: 359deg; }
+}
+
+.rotate {
+/*  animation: rotation 4s ease infinite;*/
+  background: linear-gradient(var(--gradient-angle), #d5fb81, #d7777d);
+  animation: 3.86667s gradient-rotate linear infinite;
+}
+
+#calendar {
+  background-color: black;
+  width: 320px;
+  padding: 5px;
+  display: grid;
+  grid-gap: 5px;
+  grid-template-columns: repeat(5, 60px);
+  grid-template-rows: repeat(5, 60px);
+  grid-auto-flow: row;
 }
