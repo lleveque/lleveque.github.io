@@ -27,7 +27,7 @@ if(today >= lock) {
     previous.innerHTML = '<a href="' + previousPage + '.html">ᐊ</a>'
   }
   date.style.visibility = "visible"
-  if((today.getDate() > intDay) && intDay < 25) {
+  if ((today.getDate() > intDay || today > (new Date("2022-12-25")) ) && intDay < 25) {
     nextPage = (intDay+1).toString().padStart(2,'0')
     next.innerHTML = '<a href="./' + nextPage + '.html">ᐅ</a>'
     next.style.visibility = "visible";
