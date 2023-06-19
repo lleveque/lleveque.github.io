@@ -1,0 +1,29 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Planner</title>
+  <link rel="stylesheet" href="./mvp.css">
+  <link rel="stylesheet" href="./style.css">
+  <link rel="icon" type="image/png" href="icon.png" />
+  <script src="./main.js"></script>
+</head>
+
+<body>
+
+<pre id="elm"></pre>
+
+<script>
+  var storedState = localStorage.getItem('planning');
+  var jsonState = storedState ? JSON.parse(storedState) : null;
+  console.log("Retrieved state: ", jsonState);
+  var app = Elm.Planner.init({ node: document.getElementById('elm'), flags: jsonState })
+
+  app.ports.storeData.subscribe(function(data) {
+        localStorage.setItem('planning', JSON.stringify(data));
+        console.log(data);
+    });
+</script>
+
+</body>
+</html>

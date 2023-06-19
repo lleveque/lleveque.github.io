@@ -1,0 +1,114 @@
+body { padding: 0; margin: 0; }
+
+#container {
+  display: grid;
+  grid-template-columns: auto 131vh auto;
+  column-gap: 5vh;
+}
+
+#left-panel {
+  margin-top: 5vh;
+  margin-left: 5vh;
+}
+
+#right-panel {
+  margin: 5vh;
+}
+
+/*.title {
+  display: flex;
+  justify-content: center;
+  padding: 12px;
+  gap: 10px;
+}*/
+
+.nav-button {
+  padding: 1rem;
+}
+
+.legend {
+  display: flex;
+  column-gap: 8px;
+}
+
+#planning {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5vh;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+.week {
+}
+.day {
+  height: 18vh;
+  aspect-ratio: 1;
+  padding: 0;
+  display:inline-grid;
+  background: white;
+  border: solid 0.1vh lightgray;
+}
+.day:hover {
+  border: solid 0.1vh black;
+}
+.clickable:hover {
+  border: solid 0.1vh red;
+}
+.offlimit {
+  background: var(--color-accent);
+  border: solid 0.1vh aliceblue;
+  -webkit-mask-image: url(full.svg);
+  mask-image: url(full.svg);
+  mask-size: contain ;
+}
+.day.offlimit:hover {
+  background: aliceblue;
+  border: solid 0.1vh aliceblue;
+}
+.full {
+  display:inline-grid;
+  grid-template-columns: repeat(1, 1fr);
+}
+.half {
+  display:inline-grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+.third {
+  display:inline-grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+.hatched-full {
+  -webkit-mask-image: url(full.svg);
+  mask-image: url(full.svg);
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+}
+.hatched-both {
+  -webkit-mask-image: url(half.svg);
+  mask-image: url(half.svg);
+  mask-size: contain;
+  mask-repeat: repeat-x;
+  mask-position: left;
+}
+.hatched-left {
+  -webkit-mask-image: url(half.svg);
+  mask-image: url(half.svg);
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: left;
+}
+.hatched-right {
+  -webkit-mask-image: url(half.svg);
+  mask-image: url(half.svg);
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: right;
+}
+.hatched-none {
+  -webkit-mask-image: unset;
+  mask-image: unset;
+}
+table tr:nth-child(2n) {
+  background-color: white;
+}
