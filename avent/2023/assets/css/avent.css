@@ -1,0 +1,103 @@
+html, body { height: 100%; }
+
+body {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: hsla(319, 100%, 61%, 1);
+    background: linear-gradient(180deg, hsla(319, 100%, 61%, 1) 0%, hsla(337, 86%, 38%, 1) 100%);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+}
+
+main {
+  width: 90%;
+}
+
+img {
+  width: 100%;
+  background: linear-gradient(180deg, hsla(319, 100%, 61%, 1) 0%, hsla(337, 86%, 38%, 1) 100%);
+  filter: drop-shadow(4px 4px 4px #3e1b1b);
+}
+
+#square {
+  display: none;
+}
+
+#player {
+  margin-top: 16px;
+  width: 100%;
+  filter: drop-shadow(4px 4px 4px #3e1b1b);
+}
+
+#transport {
+  display: flex;
+  visibility: none;
+  justify-content: center;
+  margin-top: 15%;
+
+  font-weight: 500;
+  font-size: xx-large;
+  font-family: Roboto,sans-serif;
+  color: #55606e;
+  color: #fff;
+  text-shadow: 2px 2px 2px #3e1b1b;
+}
+
+#transport > div {
+  visibility: hidden;
+  padding-left: 5%;
+  padding-right: 5%;
+}
+
+a {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+#date {
+  font-weight: 600;
+  font-size: xx-large;
+  font-family: Roboto,sans-serif;
+}
+
+@media (orientation: landscape) {
+  main {
+    width: 300px;
+  }
+}
+
+:root {
+  --gradient-angle: 0deg;
+}
+
+@property --gradient-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: true;
+}
+
+@keyframes gradient-rotate {
+  from { --gradient-angle: 0deg; }
+  to { --gradient-angle: 359deg; }
+}
+
+.rotate {
+/*  animation: rotation 4s ease infinite;*/
+  background: linear-gradient(var(--gradient-angle), #d5fb81, #d7777d);
+  animation: 3.86667s gradient-rotate linear infinite;
+}
+
+#calendar {
+  background-color: black;
+  width: 320px;
+  padding: 5px;
+  display: grid;
+  grid-gap: 5px;
+  grid-template-columns: repeat(5, 60px);
+  grid-template-rows: repeat(5, 60px);
+  grid-auto-flow: row;
+}
