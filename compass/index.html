@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SK7 Compass</title>
+    <style type="text/css">
+      html, body {
+        height: 100%;
+        margin: 0;
+      }
+      #c {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+    </style>
+</head>
+<body>
+    <canvas id="c"></canvas>
+    <script type="importmap">
+    {
+      "imports": {
+        "three": "https://threejs.org/build/three.module.js",
+        "three/addons/": "https://threejs.org/examples/jsm/",
+        "lil-gui": "https://cdn.jsdelivr.net/npm/lil-gui@0.19.2/+esm"
+      }
+    }
+    </script>
+    <script type="module">
+
+        import * as THREE from 'three';
+        import GUI from 'lil-gui';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        import {OBJLoader} from 'three/addons/loaders/OBJLoader.js';
+        import {MTLLoader} from 'three/addons/loaders/MTLLoader.js';
+
+        const state =
+        {
+          roll: 0,
+          pitch: 0,
+          heading: 0,
+          followBoat: false,
+          connectSerial,
+          disconnectSerial
+        };
+
+        const gui = new GUI();
+
+        const connectButton = gui.add( state, 'connectSerial' ).name("Connect to SK7");
+        const disconnectButton = gui.add( state, 'disconnectSerial' ).name("Disconnect");
+        gui.add( state, 'followBoat' ).name("Follow boat heading");
+        disconnectButton.disable();
+
+        let buffer = '';
+        let port;
+        let reader;
+
+        async function connectSerial()
+        {
+            port = await navigator.serial.requestPort();
+            await port.open({ baudRate: 9600 });
+
+            const decoder = new TextDecoderStream();
+            const readableStreamClosed = port.readable.pipeTo(decoder.writable);
+            reader = decoder.readable.getReader();
+            connectButton.disable();
+            disconnectButton.enable();
+
+            readLoop();
+        }
+
+        async function readLoop()
+        {
+            while (true)
+            {
+                const { done, value } = await reader.read();
+                if (done) { break; }
+                buffer += value; // Accumulate incoming data
+                parseData();
+            }
+        }
+
+        function parseData()
+        {
+            let lines = buffer.split('\n');
+            for (let i = 0; i < lines.length - 1; i++)
+            {
+                const line = lines[i].trim();
+                if (line) // Ignore empty lines
+                {
+                  let parsedData = getHeading(line);
+
+                  state.roll = parseInt(parsedData.roll);
+                  state.pitch = parseInt(parsedData.pitch);
+                  state.heading = parseInt(parsedData.heading);
+                }
+            }
+            buffer = lines[lines.length - 1]; // Retain the last (incomplete) line
+        }
+
+        function getHeading(packet)
+        {
+          const rollPitchHeadingCatcher = /\$RPH,([-+]\d+),([-+]\d+),([-+]\d+),\d+/g;
+
+          var caughtGroups = rollPitchHeadingCatcher.exec(packet);
+          if(caughtGroups && caughtGroups.length > 3)
+          {
+            return { roll: caughtGroups[1], pitch: caughtGroups[2], heading: caughtGroups[3] }
+          }
+          else
+          {
+            return { roll: "0", pitch: "0", heading: "0" }
+          };
+        }
+
+        async function disconnectSerial()
+        {
+            if (reader)
+            {
+                await reader.cancel(); // Release the reader lock
+                reader = null;
+            }
+            if (port)
+            {
+                await port.close(); // Close the serial port
+                port = null;
+                disconnectButton.disable();
+                connectButton.enable();
+            }
+        }
+
+        function resizeRendererToDisplaySize( renderer )
+        {
+
+          const canvas = renderer.domElement;
+          const width = canvas.clientWidth;
+          const height = canvas.clientHeight;
+          const needResize = canvas.width !== width || canvas.height !== height;
+          if ( needResize )
+          {
+            renderer.setSize( width, height, false );
+          }
+          return needResize;
+        }
+
+        function frameArea(sizeToFitOnScreen, boxSize, boxCenter, camera)
+        {
+          const halfSizeToFitOnScreen = sizeToFitOnScreen * 0.5;
+          const halfFovY = THREE.MathUtils.degToRad(camera.fov * .5);
+          const distance = halfSizeToFitOnScreen / Math.tan(halfFovY);
+         
+          // compute a unit vector that points in the direction the camera is now
+          // from the center of the box
+          const direction = (new THREE.Vector3()).subVectors(camera.position, boxCenter).normalize();
+         
+          // move the camera to a position distance units way from the center
+          // in whatever direction the camera was from the center already
+          camera.position.copy(direction.multiplyScalar(distance).add(boxCenter));
+         
+          // pick some near and far values for the frustum that
+          // will contain the box.
+          camera.near = boxSize / 100;
+          camera.far = boxSize * 100;
+         
+          camera.updateProjectionMatrix();
+         
+          // point the camera to look at the center of the box
+          camera.lookAt(boxCenter.x, boxCenter.y, boxCenter.z);
+        }
+
+        function main()
+        {
+          const canvas = document.querySelector( '#c' );
+          const renderer = new THREE.WebGLRenderer( { antialias: true, canvas } );
+
+          const fov = 75;
+          const aspect = 2; // the canvas default
+          const near = 0.1;
+          const far = 15;
+          const cameraGroup = new THREE.Group();
+          const camera = new THREE.PerspectiveCamera( fov, aspect, near, far );
+          cameraGroup.add( camera );
+          camera.position.z = 7;
+          camera.position.y = 2;
+
+          const boxWidth = 3.1;
+          const boxHeight = 1.8;
+          const boxDepth = 4.2;
+          const geometry = new THREE.BoxGeometry( boxWidth, boxHeight, boxDepth );
+          const material = new THREE.MeshPhongMaterial( { color: 0x44aa88 } ); // greenish blue
+          const cube = new THREE.Mesh( geometry, material );
+          
+          let boat;
+
+          // const controls = new OrbitControls( camera, canvas );
+          // controls.target.set( 0, 0, 0 );
+          // controls.update();
+
+          const scene = new THREE.Scene();
+          scene.add( cameraGroup );
+
+          const loader = new THREE.TextureLoader();
+          const texture = loader.load(
+            'sky-mini.jpg',
+            () =>
+            {
+              texture.mapping = THREE.EquirectangularReflectionMapping;
+              texture.colorSpace = THREE.SRGBColorSpace;
+              scene.background = texture;
+            });
+
+          {
+            const color = 0xFFFFFF;
+            const intensity = 3;
+            const light = new THREE.DirectionalLight( color, intensity );
+            light.position.set( - 1, 2, 4 );
+            scene.add( light );
+          }
+
+          {
+            const mtlLoader = new MTLLoader();
+            mtlLoader.load('boat.mtl', (mtl) =>
+            {
+              mtl.preload();
+              const objLoader = new OBJLoader();
+              objLoader.setMaterials(mtl);
+              objLoader.load('boat.obj', (root) =>
+              {
+                scene.add(root);
+                boat = root;
+               
+                // const box = new THREE.Box3().setFromObject(root);
+             
+                // const boxSize = box.getSize(new THREE.Vector3()).length();
+                // const boxCenter = box.getCenter(new THREE.Vector3());
+             
+                // // set the camera to frame the box
+                // frameArea(boxSize * 1.2, boxSize, boxCenter, camera);
+             
+                // // update the Trackball controls to handle the new size
+                // controls.maxDistance = boxSize * 10;
+                // controls.target.copy(boxCenter);
+                // controls.update();
+              });
+            });
+          }
+
+          function render( time )
+          {
+            time *= 0.001; // convert time to seconds
+
+            if ( resizeRendererToDisplaySize( renderer ) )
+            {
+              const canvas = renderer.domElement;
+              camera.aspect = canvas.clientWidth / canvas.clientHeight;
+              camera.updateProjectionMatrix();
+            }
+
+            if(boat)
+            {
+              boat.rotation.z = - 2 * Math.PI * state.roll / 3600; // time;
+              boat.rotation.x = 2 * Math.PI * state.pitch / 3600;
+              boat.rotation.y = - 2 * Math.PI * state.heading / 3600;
+              cameraGroup.rotation.y = state.followBoat ? - 2 * Math.PI * state.heading / 3600 : 0;
+              scene.remove( cube );
+            }
+            else
+            {
+              scene.add( cube );
+
+              cube.rotation.z = - 2 * Math.PI * state.roll / 3600; // time;
+              cube.rotation.x = 2 * Math.PI * state.pitch / 3600;
+              cube.rotation.y = - 2 * Math.PI * state.heading / 3600;
+              cameraGroup.rotation.y = state.followBoat ? - 2 * Math.PI * state.heading / 3600 : 0;
+            }
+
+            renderer.render( scene, camera );
+            requestAnimationFrame( render );
+          }
+
+          requestAnimationFrame( render );
+        }
+
+        main();
+    </script>
+</body>
+</html>
