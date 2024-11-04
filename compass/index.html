@@ -34,6 +34,7 @@
         import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
         import {OBJLoader} from 'three/addons/loaders/OBJLoader.js';
         import {MTLLoader} from 'three/addons/loaders/MTLLoader.js';
+        import { Water } from 'three/addons/objects/Water.js';
 
         const state =
         {
@@ -200,6 +201,29 @@
           const scene = new THREE.Scene();
           scene.add( cameraGroup );
 
+
+          const waterGeometry = new THREE.PlaneGeometry(100000, 100000);
+          const water = new Water(
+            waterGeometry,
+            {
+              textureWidth: 512,
+              textureHeight: 512,
+              waterNormals: new THREE.TextureLoader().load('waternormals.jpg', function ( texture ) {
+                texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+              }),
+              alpha: 1.0,
+              sunDirection: new THREE.Vector3(),
+              sunColor: 0xffffff,
+              waterColor: 0x001e0f,
+              distortionScale: 3.7,
+              fog: scene.fog !== undefined
+            }
+          );
+          water.rotation.x =- Math.PI / 2;
+          scene.add(water);
+          
+          // const waterUniforms = water.material.uniforms;
+
           const loader = new THREE.TextureLoader();
           const texture = loader.load(
             'sky-mini.jpg',
@@ -230,13 +254,13 @@
                 scene.add(root);
                 boat = root;
                
-                // const box = new THREE.Box3().setFromObject(root);
+                const box = new THREE.Box3().setFromObject(root);
              
-                // const boxSize = box.getSize(new THREE.Vector3()).length();
-                // const boxCenter = box.getCenter(new THREE.Vector3());
+                const boxSize = box.getSize(new THREE.Vector3()).length();
+                const boxCenter = box.getCenter(new THREE.Vector3());
              
-                // // set the camera to frame the box
-                // frameArea(boxSize * 1.2, boxSize, boxCenter, camera);
+                // set the camera to frame the box
+                frameArea(boxSize * 1.2, boxSize, boxCenter, camera);
              
                 // // update the Trackball controls to handle the new size
                 // controls.maxDistance = boxSize * 10;
@@ -248,7 +272,11 @@
 
           function render( time )
           {
+            
             time *= 0.001; // convert time to seconds
+
+            water.material.uniforms[ 'time' ].value += 1.0 / 1200.0;
+            // water.material.uniforms[ 'time' ].value = time / 60.0;
 
             if ( resizeRendererToDisplaySize( renderer ) )
             {
@@ -259,6 +287,9 @@
 
             if(boat)
             {
+              boat.position.x = 0;
+              boat.position.y = 0.1;
+              boat.position.z = 0;
               boat.rotation.z = - 2 * Math.PI * state.roll / 3600; // time;
               boat.rotation.x = 2 * Math.PI * state.pitch / 3600;
               boat.rotation.y = - 2 * Math.PI * state.heading / 3600;
