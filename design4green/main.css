@@ -1,0 +1,222 @@
+body {
+    max-width: 1000px;
+    margin: auto;
+}
+
+#content {
+    margin: 30px;
+}
+
+table td, table th, table tr {
+    text-align: unset;
+}
+
+table {
+    width: 100%;
+}
+
+.criteria-cell {
+    white-space: break-spaces;
+    width:100%;
+}
+
+.status {
+    text-align: center;
+    width: 180px;
+}
+
+.status-na {
+    color: #757575;
+    text-decoration: line-through;
+}
+
+.category-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 4px;
+}
+
+.category-title {
+    font-size: larger;
+    flex-grow: 100;
+}
+
+@media print {
+
+    @page {
+        size:A4 portrait;
+        margin: 5mm 5mm 5mm 5mm;
+        padding: 0mm 0mm 0mm 0mm;
+    }
+
+    .noprint {
+        display: none;
+    }
+
+    .progress {
+        border: 3px solid black;
+    }
+
+    #main-progress {
+        border: 4px solid black;
+    }
+
+    .category {
+        break-before: page;
+    }
+
+    .criterion {
+        break-before:page;
+        break-inside:avoid-page;
+        break-after:page;
+    }
+
+    details {
+        margin: 0 0;
+    }
+
+    table {
+        break-before: avoid-page;
+        break-inside: avoid-page;
+        break-after:auto;
+    }
+}
+
+.score {
+    display: inline-flex;
+    gap: 8px;
+}
+
+.progressbar {
+    height: 16px;
+    width: 100px;
+    background-color: #fff;
+    padding : 2px;
+    border: 1px solid gray;
+}
+
+.progress {
+    height: 100%;
+    background-color: green;
+}
+
+#filterbar {
+    margin-bottom: 0rem;
+}
+
+#filterbar ul {
+    margin-top: 0rem;
+    margin-bottom: 0rem;
+}
+
+#topbar {
+    margin-bottom: 0rem;
+    justify-content: flex-end;
+}
+
+#topbar ul {
+    margin-top: 0rem;
+    margin-bottom: 0rem;
+}
+
+button {
+    padding: 0.5rem 1rem;
+}
+
+button.status-na {
+    background-color: #757575;
+    color: #fff;
+    text-decoration: none;
+    border: none;
+}
+
+button.status-ok {
+    background-color: #56823A;
+    color: #fff;
+    text-decoration: none;
+    border: none;
+}
+
+button.status-ko {
+    background-color: #dc2d44;
+    color: #fff;
+    text-decoration: none;
+    border: none;
+}
+
+button.status-wip {
+    background-color: #946A00;
+    color: #fff;
+    text-decoration: none;
+    border: none;
+}
+
+.active {
+    opacity: 100%;
+}
+.inactive {
+    opacity: 20%;
+}
+
+.filter-button {
+    border: none;
+    padding: 0.2rem 1rem;
+}
+
+#filter-ok {
+    background-color: #56823A;
+}
+
+#filter-wip {
+    background-color: #946A00;
+}
+
+#filter-na {
+    background-color: #757575;
+}
+
+.percents {
+    width: 42px;
+}
+
+aside {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+#scorecard {
+/*    padding: 1rem;*/
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+#scorecard-details {
+  width: 100%;
+}
+
+#main-progressbar {
+    flex-grow:100;
+    height: 1rem;
+    background-color: #fff;
+    padding : 2px;
+    border: 1px solid gray;
+}
+
+#main-progress {
+    height: 100%;
+    background-color: green;
+}
+
+#currentSite {
+    flex-grow: 100;
+    padding: 0.8rem;
+    margin-bottom: 0rem;
+}
+
+button.light {
+    background-color: #fff;
+    color : var(--color-link);
+}
