@@ -1,0 +1,39 @@
+<!DOCTYPE HTML>
+<html lang=fr>
+<head>
+  <meta charset="UTF-8">
+  <title>Sobriscore - Évaluez votre maturité sur la sobriété énergétique</title>
+  <style>body { padding: 0; margin: 0; }</style>
+  <link rel="stylesheet" href="./mvp.css">
+  <link rel="stylesheet" href="./main.css">
+</head>
+
+<body>
+<div id="elm"></div>
+
+<script src="./data.js"></script>
+
+<script src="./main.js"></script>
+
+<script type="text/javascript">
+
+  var app = Elm.Main.init({
+      node: document.getElementById('elm'),
+      flags: data
+  });
+
+  var scrollToY = function(position) {
+    console.log("scrolling")
+    window.scroll({
+        top: position,
+        left: 0,
+        behavior: 'smooth'
+    });
+  };
+
+  app.ports.resetScroll.subscribe(scrollToY);
+
+</script>
+
+</body>
+</html>
