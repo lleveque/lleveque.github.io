@@ -32,6 +32,14 @@ img {
   filter: drop-shadow(0px 0px 8px #000);
 }
 
+.green-audio-player .volume {
+  display: none;
+}
+
+.green-audio-player .download {
+  margin-left: unset;
+}
+
 #transport {
   display: flex;
   visibility: none;
