@@ -30,6 +30,8 @@ if(today >= lock)
     nextPage = (intDay+1).toString().padStart(2,'0')
     next.innerHTML = '<a href="./' + nextPage + '.html">ᐅ</a>'
     next.style.visibility = "visible";
+    
+    player.player.addEventListener("ended", (event) => {window.location.href = './' + nextPage + '.html';})
   }
 }
 else { for (p of document.querySelectorAll('#player audio')) { p.pause(); } }
