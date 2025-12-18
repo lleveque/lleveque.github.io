@@ -3,20 +3,106 @@ fetch('calendar.json')
     .then(data => buildCells(data)) // Work with JSON data
     .catch(error => console.error('Error fetching JSON:', error));
 
+function dragMoveListener (event) {
+  var target = event.target
+  // keep the dragged position in the data-x/data-y attributes
+  var x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx
+  var y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy
+
+  // translate the element
+  target.style.transform = 'translate(' + x + 'px, ' + y + 'px)'
+
+  // update the posiion attributes
+  target.setAttribute('data-x', x)
+  target.setAttribute('data-y', y)
+}
+
+// this function is used later in the resizing and gesture demos
+window.dragMoveListener = dragMoveListener
+
 function buildCells(calendar)
 {
-  console.log(calendar)
   const today = new Date()
 
   let upperBound = (today <= new Date("2025-12-24")) ? today.getDate() : 24;
+
+  var angleScale = {
+    angle: 0,
+    scale: 1
+  }
+  // var resetTimeout
 
   for (var i = 0; i < upperBound; i++)
   {
     let dayString = (i+1).toString().padStart(2,'0')
     let cell = document.createElement("a");
 
-    cell.setAttribute("style", "background: url('./assets/png/" + dayString + "-" + calendar[i].shortName + ".png');");
+    cell.setAttribute("class", "cell");
+    cell.setAttribute("id", "cell-" + dayString);
+    cell.setAttribute("style", "background: url('./assets/png/" + dayString + "-" + calendar.songs[i].shortName + ".png');");
     cell.href = "./" + dayString + ".html" ;
+    // var gestureArea = document.getElementById('calendar')
+    // var scaleElement = document.getElementById('scale-element')
+    interact(cell)
+      .gesturable({
+        listeners: {
+          start (event) {
+            angleScale.angle -= event.angle
+
+            // clearTimeout(resetTimeout)
+            // scaleElement.classList.remove('reset')
+          },
+          move (event) {
+            // document.body.appendChild(new Text(event.scale))
+            var currentAngle = event.angle + angleScale.angle
+            var currentScale = event.scale * angleScale.scale
+
+            cell.style.transform =
+              'rotate(' + currentAngle + 'deg)' // + 'scale(' + currentScale + ')'
+
+            // uses the dragMoveListener from the draggable demo above
+            dragMoveListener(event)
+          },
+          end (event) {
+            angleScale.angle = angleScale.angle + event.angle
+            angleScale.scale = angleScale.scale * event.scale
+
+            // resetTimeout = setTimeout(reset, 1000)
+            // scaleElement.classList.add('reset')
+          }
+        }
+      })
+      .draggable({
+        listeners: { move: dragMoveListener }
+      })
+
     document.getElementById("calendar").appendChild(cell);
-  }
+
+  //   const pointerDrag = (cell) => {
+
+  //   const move = (ev) => {
+  //     cell.style.left = `${cell.offsetLeft + ev.movementX}px`
+  //     cell.style.top = `${cell.offsetTop + ev.movementY}px`
+  //   };
+  
+  //   const dragStart = (ev) => cell.setPointerCapture(ev.pointerId);
+  //   const drag      = (ev) => cell.hasPointerCapture(ev.pointerId) && move(ev);
+  //   const noDefault = (ev) => ev.preventDefault();
+  
+  //   cell.addEventListener("pointerdown", dragStart);
+  //   cell.addEventListener("pointermove", drag);
+  //   cell.addEventListener("touchstart", noDefault); // Instead of CSS touch-action: none;
+  // }
+
+
+    
+
+
+    // function reset () {
+    //   scaleElement.style.transform = 'scale(1)'
+
+    //   angleScale.angle = 0
+    //   angleScale.scale = 1
+    // }
+    }
 }
