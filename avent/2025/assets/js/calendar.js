@@ -12,13 +12,20 @@ function dragMoveListener (event) {
   // translate the element
   target.style.transform = 'translate(' + x + 'px, ' + y + 'px)'
 
+  var angle = (parseFloat(target.getAttribute('data-angle')) || 0) + event.da
+  target.style.transform = 'rotate(' + angle + 'deg)'
+  document.body.appendChild(new Text(event.da))
+
   // update the posiion attributes
   target.setAttribute('data-x', x)
   target.setAttribute('data-y', y)
+  target.setAttribute('data-angle', angle)
+  // event.preventDefault()
 }
 
 // this function is used later in the resizing and gesture demos
 window.dragMoveListener = dragMoveListener
+let allAngleScales = new Map(); 
 
 function buildCells(calendar)
 {
@@ -26,19 +33,17 @@ function buildCells(calendar)
 
   let upperBound = (today <= new Date("2025-12-24")) ? today.getDate() : 24;
 
-  var angleScale = {
-    angle: 0,
-    scale: 1
-  }
+  const defaultAngleScale = { angle: 0, scale: 1 }
   // var resetTimeout
 
   for (var i = 0; i < upperBound; i++)
   {
-    let dayString = (i+1).toString().padStart(2,'0')
+    const dayString = (i+1).toString().padStart(2,'0')
+    const cellId = "cell-" + dayString
     let cell = document.createElement("a");
 
     cell.setAttribute("class", "cell");
-    cell.setAttribute("id", "cell-" + dayString);
+    cell.setAttribute("id", cellId);
     cell.setAttribute("style", "background: url('./assets/png/" + dayString + "-" + calendar.songs[i].shortName + ".png');");
     cell.href = "./" + dayString + ".html" ;
     // var gestureArea = document.getElementById('calendar')
@@ -47,25 +52,37 @@ function buildCells(calendar)
       .gesturable({
         listeners: {
           start (event) {
-            angleScale.angle -= event.angle
+            // let angleScale = allAngleScales.get(cellId)
+            // if(!angleScale) { angleScale = defaultAngleScale }
+
+            // angleScale.angle -= event.angle
+            // allAngleScales.set(cellId, angleScale)
 
             // clearTimeout(resetTimeout)
             // scaleElement.classList.remove('reset')
           },
           move (event) {
-            // document.body.appendChild(new Text(event.scale))
-            var currentAngle = event.angle + angleScale.angle
-            var currentScale = event.scale * angleScale.scale
+            // // document.body.appendChild(new Text(event.scale))
+            // let angleScale = allAngleScales.get(cellId)
+            // if(!angleScale) { angleScale = defaultAngleScale }
 
-            cell.style.transform =
-              'rotate(' + currentAngle + 'deg)' // + 'scale(' + currentScale + ')'
+            // var currentAngle = event.angle //+ angleScale.angle
+            // var currentScale = event.scale * angleScale.scale
 
-            // uses the dragMoveListener from the draggable demo above
+            // cell.style.transform =
+            //   'rotate(' + currentAngle + 'deg)' // + 'scale(' + currentScale + ')'
+
+            // // uses the dragMoveListener from the draggable demo above
             dragMoveListener(event)
           },
           end (event) {
-            angleScale.angle = angleScale.angle + event.angle
-            angleScale.scale = angleScale.scale * event.scale
+            // let angleScale = allAngleScales.get(cellId)
+            // if(!angleScale) { angleScale = defaultAngleScale }
+
+            // angleScale.angle = angleScale.angle + event.angle
+            // angleScale.scale = angleScale.scale * event.scale
+
+            // allAngleScales.set(cellId, angleScale)
 
             // resetTimeout = setTimeout(reset, 1000)
             // scaleElement.classList.add('reset')

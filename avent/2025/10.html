@@ -3,18 +3,26 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="../assets/css/green-audio-player.min.css">
-    <link rel="stylesheet" type="text/css" href="../assets/css/avent.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/green-audio-player.min.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/avent.css">
 
     <title>Calendrier de l'Avent 2025</title>
   </head
 >  <body>
     <main>
-      <div onclick="player.togglePlay()">
-        <img id="square" src="assets/png/10-genie.png" />
+      <div id="square-container" onclick="player.togglePlay()">
+        <div id="square-3d">
+          <div class="shader">
+            <div id="front-square"></div><!-- img src="https://assets.codepen.io/2153413/sparrow-base.png" alt="Silhouette design of a sparrow sitting on a branch" width="512"> -->
+            <div class="shader-layer specular gradient-glitter">
+              <img class="shader-layer mask" src="assets/png/glitter.png" alt="" width="300">
+            </div>
+          </div>
+          <div id="square"><img src="assets/png/10-genie.png" /></div>
+        </div>
       </div>
       <div id="player">
-         <audio autoplay>
+         <audio>
           <source src="assets/mp3/10-genie.mp3" type="audio/mp3">
           Ça n'a pas l'air de marcher... :(
         </audio>
@@ -25,7 +33,7 @@
         <div id="next" class="transport-control">ᐅ</div>
       </div>
     </main>
-    <script src="../assets/js/green-audio-player.min.js"></script>
-    <script src="../assets/js/avent.js"></script>
+    <script src="assets/js/green-audio-player.min.js"></script>
+    <script src="assets/js/avent.js"></script>
   </body>
 </html>

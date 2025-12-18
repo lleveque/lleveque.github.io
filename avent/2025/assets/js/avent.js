@@ -2,7 +2,7 @@ const pagename = window.location.pathname.split("/").pop();
 const day = pagename.substring(0,pagename.indexOf(".html")) || pagename;
 const intDay = parseInt(day)
 const lock = new Date((new Date('2025-12-' + day)).toDateString());
-const square = document.getElementById("square")
+const square = document.getElementById("square-3d")
 const transport = document.getElementById("transport")
 const previous = document.getElementById("previous")
 const next = document.getElementById("next")
@@ -14,9 +14,13 @@ let player
 if(today >= lock)
 {
   player = new GreenAudioPlayer('#player', {'showDownloadButton': true});
-  square.style.display = "block";
+  player.player.addEventListener("ended", (event) => {window.location.href = './' + nextPage + '.html';})
+  player.player.addEventListener("play", () => { square.classList.add("playing") })
+  player.player.addEventListener("pause", () => { square.classList.remove("playing") })
 
+  square.style.display = "block";
   transport.style.visibility = "visible";
+
   date.innerHTML = '<a href="./index.html">' + day + '</a>';
   if(intDay > 1)
   {
