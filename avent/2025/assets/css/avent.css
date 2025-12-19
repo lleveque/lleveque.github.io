@@ -168,7 +168,7 @@ a {
     #F56476 60%
   );*/
   .shader {
-    position: relative;
+    position: absolute;
     overflow: hidden;
     backface-visibility: hidden;
   }
