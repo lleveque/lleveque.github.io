@@ -44,7 +44,7 @@ function buildCells(calendar)
 
     cell.setAttribute("class", "cell");
     cell.setAttribute("id", cellId);
-    cell.setAttribute("style", "background: url('./assets/png/" + dayString + "-" + calendar.songs[i].shortName + ".png');");
+    cell.setAttribute("style", "background: url('./assets/png/" + dayString + "-" + calendar.songs[i].shortName + ".png'); background-size: 'contain';");
     cell.href = "./" + dayString + ".html" ;
     // var gestureArea = document.getElementById('calendar')
     // var scaleElement = document.getElementById('scale-element')
